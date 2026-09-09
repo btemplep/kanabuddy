@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanaBuddy &mdash; Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Kosugi+Maru&family=Kaisei+Decol:wght@400;700&family=Yuji+Syuku&family=Klee+One:wght@400;600&family=Hachi+Maru+Pop&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html">
+            <span class="logo-slot" aria-hidden="true">か</span>
+            <span>KanaBuddy</span>
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <!-- Setup view -->
+        <section id="setup-view" class="card">
+            <h2>Build your quiz</h2>
+            <p>Select which kana groups to include, and choose a font.</p>
+
+            <div class="setup-grid">
+                <fieldset class="group-fieldset" id="hiragana-groups">
+                    <legend>Hiragana</legend>
+                    <!-- checkboxes injected here -->
+                </fieldset>
+
+                <fieldset class="group-fieldset" id="katakana-groups">
+                    <legend>Katakana</legend>
+                    <!-- checkboxes injected here -->
+                </fieldset>
+            </div>
+
+            <fieldset class="group-fieldset" style="margin-top:24px;">
+                <legend>Font</legend>
+                <div class="font-dropdown" id="font-dropdown">
+                    <button type="button" class="font-dropdown-toggle" id="font-toggle"
+                            aria-haspopup="listbox" aria-expanded="false">
+                        <span class="font-toggle-label" id="font-toggle-label">Sans (Gothic)</span>
+                        <span class="font-toggle-caret" aria-hidden="true">▾</span>
+                    </button>
+                    <div class="font-options" id="font-options" role="listbox" hidden>
+                        <!-- font radios injected before this random option -->
+                        <label class="font-choice" id="random-choice">
+                            <input type="radio" name="font" value="random">
+                            <span class="font-info">
+                                <span class="font-name">Randomize</span>
+                                <span class="font-note">a random font per kana</span>
+                            </span>
+                            <span class="font-sample" id="random-sample"></span>
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <p class="form-error" id="setup-error"></p>
+
+            <div class="setup-actions">
+                <button class="btn btn-primary btn-lg" id="start-btn" type="button">Start Quiz</button>
+            </div>
+        </section>
+
+        <!-- Quiz view -->
+        <section id="quiz-view" class="hidden">
+            <div class="quiz-toolbar">
+                <span class="quiz-progress" id="quiz-progress"></span>
+                <div class="toolbar-actions">
+                    <button class="btn btn-ghost" id="restart-btn" type="button">New Quiz</button>
+                    <button class="btn btn-accent" id="finish-btn" type="button">Finish</button>
+                </div>
+            </div>
+            <div class="kana-grid" id="kana-grid"></div>
+            <div class="quiz-toolbar quiz-toolbar-bottom">
+                <span class="quiz-progress" id="quiz-progress-bottom"></span>
+                <div class="toolbar-actions">
+                    <button class="btn btn-ghost" id="restart-btn-bottom" type="button">New Quiz</button>
+                    <button class="btn btn-accent" id="finish-btn-bottom" type="button">Finish</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a href="https://github.com/btemplep/kanabuddy/blob/main/CHANGELOG.md"
+           class="version-link" data-app-version>v0.0.0</a>
+    </footer>
+
+    <!-- Results modal -->
+    <div class="overlay" id="results-overlay">
+        <div class="results-card">
+            <h2>Results</h2>
+            <div class="results-stat" id="results-percent">0%</div>
+            <p class="results-detail" id="results-detail"></p>
+
+            <div class="results-summary" id="results-summary">
+                <span class="summary-chip summary-correct">
+                    <span class="summary-count" id="summary-correct">0</span> correct
+                </span>
+                <span class="summary-chip summary-wrong">
+                    <span class="summary-count" id="summary-wrong">0</span> wrong
+                </span>
+                <span class="summary-chip summary-missing">
+                    <span class="summary-count" id="summary-missing">0</span> missing
+                </span>
+            </div>
+
+            <div class="results-breakdown" id="results-breakdown">
+                <div class="breakdown-head">
+                    <span class="bh-kana">Kana</span>
+                    <span class="bh-given">Your answer</span>
+                    <span class="bh-correct">Correct</span>
+                </div>
+                <div class="breakdown-list" id="breakdown-list"></div>
+            </div>
+
+            <div class="results-actions">
+                <button class="btn btn-ghost" id="results-review" type="button">Keep Practicing</button>
+                <button class="btn btn-primary" id="results-new" type="button">New Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/version.js"></script>
+    <script src="js/kana-data.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/footer.js"></script>
+</body>
+</html>

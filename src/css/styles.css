@@ -1,0 +1,680 @@
+/* KanaBuddy centralized styles.
+   Adjust the theme by editing the variables in :root below. */
+
+:root {
+    /* Theme colors */
+    --color-primary: #81e4b4;
+    --color-secondary: #9060e7;
+
+    /* Derived / supporting colors */
+    --color-primary-dark: #4fc98d;
+    --color-secondary-dark: #6f42c9;
+    --color-bg: #f6f5fb;
+    --color-surface: #ffffff;
+    --color-text: #241f31;
+    --color-text-muted: #6c6786;
+    --color-border: #e2def0;
+
+    /* Feedback colors */
+    --color-correct: #81e4b4;
+    --color-correct-border: #35b57e;
+    --color-wrong: #f2a5a5;
+    --color-wrong-border: #d94f4f;
+
+    /* Layout */
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 8px 30px rgba(144, 96, 231, 0.12);
+    --max-width: 960px;
+
+    /* Kana display font (overridden inline per-quiz font choice) */
+    --kana-font: 'Hiragino Kaku Gothic Pro', 'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif;
+    --ui-font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--ui-font);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+.page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 24px 20px 64px;
+}
+
+/* Header / branding */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: linear-gradient(120deg, var(--color-secondary), var(--color-primary));
+    color: #fff;
+}
+
+.site-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    color: #fff;
+}
+
+.site-header .brand .logo-slot {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+}
+
+.site-header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.site-header nav a:hover {
+    opacity: 1;
+}
+
+/* Hero (home page) */
+.hero {
+    text-align: center;
+    padding: 64px 20px 40px;
+}
+
+.hero h1 {
+    font-size: 2.6rem;
+    margin: 0 0 12px;
+    background: linear-gradient(120deg, var(--color-secondary), var(--color-primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    max-width: 560px;
+    margin: 0 auto 32px;
+}
+
+.hero .kana-sample {
+    font-family: var(--kana-font);
+    font-size: 3rem;
+    letter-spacing: 0.15em;
+    color: var(--color-secondary);
+    margin-bottom: 32px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 26px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--color-secondary);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(144, 96, 231, 0.35);
+}
+
+.btn-primary:hover {
+    background: var(--color-secondary-dark);
+}
+
+.btn-accent {
+    background: var(--color-primary);
+    color: var(--color-text);
+    box-shadow: 0 6px 18px rgba(129, 228, 180, 0.4);
+}
+
+.btn-accent:hover {
+    background: var(--color-primary-dark);
+}
+
+.btn-lg {
+    font-size: 1.2rem;
+    padding: 16px 40px;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+}
+
+.btn-ghost:hover {
+    background: var(--color-secondary);
+    color: #fff;
+}
+
+/* Cards / panels */
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+/* Setup form */
+.setup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.group-fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin: 0;
+}
+
+.group-fieldset legend {
+    font-weight: 700;
+    color: var(--color-secondary);
+    padding: 0 8px;
+}
+
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    cursor: pointer;
+}
+
+.check-row input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.font-dropdown {
+    position: relative;
+    max-width: 100%;
+}
+
+.font-dropdown-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-align: left;
+}
+
+.font-dropdown-toggle:hover,
+.font-dropdown.open .font-dropdown-toggle {
+    border-color: var(--color-secondary);
+}
+
+.font-toggle-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.font-toggle-caret {
+    flex: 0 0 auto;
+    color: var(--color-secondary);
+    transition: transform 0.15s ease;
+}
+
+.font-dropdown.open .font-toggle-caret {
+    transform: rotate(180deg);
+}
+
+.font-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    max-height: 340px;
+    overflow-y: auto;
+    padding: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+}
+
+.font-options[hidden] {
+    display: none;
+}
+
+/* When there isn't room below, open the panel upward. */
+.font-dropdown.drop-up .font-options {
+    top: auto;
+    bottom: calc(100% + 6px);
+}
+
+.font-options label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.font-options label:hover {
+    border-color: var(--color-secondary);
+    background: rgba(144, 96, 231, 0.04);
+}
+
+.font-options input {
+    accent-color: var(--color-secondary);
+    flex: 0 0 auto;
+}
+
+.font-info {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    min-width: 140px;
+}
+
+.font-name {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.font-note {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.font-sample {
+    flex: 1 1 auto;
+    text-align: right;
+    font-size: 1.6rem;
+    line-height: 1.3;
+    color: var(--color-secondary);
+    /* Wrap long samples rather than overflow the panel. */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
+}
+
+/* On narrow screens, keep the radio + name on one row and wrap the
+   kana sample to its own full-width line below so nothing runs off. */
+@media (max-width: 480px) {
+    .font-options label {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .font-sample {
+        flex: 1 0 100%;
+        text-align: left;
+        width: 100%;
+    }
+}
+
+.setup-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-error {
+    color: var(--color-wrong-border);
+    font-weight: 600;
+    margin: 12px 0 0;
+    min-height: 1.2em;
+}
+
+/* Quiz grid */
+.quiz-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quiz-toolbar-bottom {
+    margin-top: 24px;
+    margin-bottom: 0;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.quiz-progress {
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.kana-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.kana-cell {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 10px;
+    text-align: center;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.kana-cell .kana-char {
+    font-family: var(--kana-font);
+    font-size: 2.4rem;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.kana-cell .kana-input {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 1rem;
+    font-family: var(--ui-font);
+    text-align: center;
+    outline: none;
+}
+
+.kana-cell .kana-input:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(144, 96, 231, 0.2);
+}
+
+.kana-cell.correct {
+    background: var(--color-correct);
+    border-color: var(--color-correct-border);
+}
+
+.kana-cell.correct .kana-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--color-correct-border);
+}
+
+.kana-cell.wrong {
+    background: var(--color-wrong);
+    border-color: var(--color-wrong-border);
+}
+
+.kana-cell.wrong .kana-input {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: var(--color-wrong-border);
+}
+
+/* Results modal */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 31, 49, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+}
+
+.overlay.open {
+    display: flex;
+}
+
+.results-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 28px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.results-card h2 {
+    margin: 0 0 4px;
+    color: var(--color-secondary);
+}
+
+.results-stat {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin: 0;
+}
+
+.results-detail {
+    color: var(--color-text-muted);
+    margin: 4px 0 12px;
+}
+
+.results-summary {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.summary-chip {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.summary-chip .summary-count {
+    font-weight: 700;
+}
+
+.summary-correct {
+    background: rgba(129, 228, 180, 0.25);
+    border-color: var(--color-correct-border);
+}
+
+.summary-wrong {
+    background: rgba(217, 79, 79, 0.15);
+    border-color: var(--color-wrong-border);
+}
+
+.summary-missing {
+    background: rgba(108, 103, 134, 0.12);
+}
+
+.results-breakdown {
+    text-align: left;
+    margin-bottom: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    /* Take remaining space and let only the list inside scroll, so the
+       action buttons below always stay visible. */
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.breakdown-head,
+.breakdown-row {
+    display: grid;
+    grid-template-columns: 64px 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+}
+
+.breakdown-head {
+    background: var(--color-bg);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    flex: 0 0 auto;
+}
+
+.breakdown-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.breakdown-row {
+    border-top: 1px solid var(--color-border);
+    font-size: 0.95rem;
+}
+
+.breakdown-row .bd-kana {
+    font-family: var(--kana-font);
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.breakdown-row .bd-given {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.breakdown-row .bd-correct {
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.breakdown-row .bd-empty {
+    color: var(--color-text-muted);
+}
+
+/* Correct rows: subtle green; given answer in green. */
+.breakdown-row.correct {
+    background: rgba(129, 228, 180, 0.15);
+}
+
+.breakdown-row.correct .bd-given {
+    color: var(--color-correct-border);
+}
+
+/* Wrong and missing rows: red highlight, given answer in red. */
+.breakdown-row.wrong,
+.breakdown-row.missing {
+    background: rgba(217, 79, 79, 0.1);
+}
+
+.breakdown-row.wrong .bd-given,
+.breakdown-row.missing .bd-given {
+    color: var(--color-wrong-border);
+}
+
+.breakdown-row.wrong .bd-correct,
+.breakdown-row.missing .bd-correct {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.results-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 520px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .kana-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.site-footer .version-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+}
+
+.site-footer .version-link:hover {
+    color: var(--color-secondary);
+}
