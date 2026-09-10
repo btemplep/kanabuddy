@@ -297,6 +297,18 @@
             }
         } else {
             cell.classList.add("wrong");
+            // Show the attempted answer as shadow (placeholder) text and clear
+            // the field so the user can retype. Keep focus on this box so the
+            // cursor stays put (and mobile keyboards don't jump to the next
+            // field on a wrong Enter).
+            const attempt = input.value.trim();
+            if (attempt !== "") {
+                input.placeholder = attempt;
+            }
+            input.value = "";
+            if (focusNext) {
+                focusInput(index);
+            }
         }
     }
 

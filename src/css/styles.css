@@ -671,14 +671,29 @@ body {
     padding: 20px;
     color: var(--color-text-muted);
     font-size: 0.85rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.site-footer .version-link {
+.site-footer .version-link,
+.site-footer .footer-link {
     color: var(--color-text-muted);
     text-decoration: none;
     border-bottom: 1px dotted currentColor;
 }
 
-.site-footer .version-link:hover {
+.site-footer .version-link:hover,
+.site-footer .footer-link:hover {
     color: var(--color-secondary);
+}
+
+.site-footer .footer-sep {
+    color: var(--color-border);
+}
+
+.site-footer .footer-copyright {
+    color: var(--color-text-muted);
 }
