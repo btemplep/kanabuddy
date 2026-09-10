@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */ 
 // KanaBuddy kana data.
 // Each kana entry: { kana: <character>, romaji: [<accepted answers>] }
 // Groups are shared conceptually between hiragana and katakana; each script

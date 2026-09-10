@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */ 
 // KanaBuddy quiz logic.
 // Relies on globals from kana-data.js:
 //   KANA_DATA, GROUP_LABELS, FONT_OPTIONS, buildDeck, shuffle
@@ -293,6 +297,18 @@
             }
         } else {
             cell.classList.add("wrong");
+            // Show the attempted answer as shadow (placeholder) text and clear
+            // the field so the user can retype. Keep focus on this box so the
+            // cursor stays put (and mobile keyboards don't jump to the next
+            // field on a wrong Enter).
+            const attempt = input.value.trim();
+            if (attempt !== "") {
+                input.placeholder = attempt;
+            }
+            input.value = "";
+            if (focusNext) {
+                focusInput(index);
+            }
         }
     }
 
