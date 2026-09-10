@@ -44,9 +44,6 @@
     let deck = [];
     // cellState[i] = { firstAttempt: null|true|false, solved: bool, attempted: bool }
     let cellState = [];
-    // Index of the box the user is currently answering. Used to pull focus
-    // back to it if a wrong answer causes the mobile keyboard to jump ahead.
-    let activeIndex = -1;
 
     function renderGroupChecks(container, script) {
         GROUP_ORDER.forEach(function (group) {
@@ -274,7 +271,6 @@
 
     function gradeCell(index, options) {
         const focusNext = !options || options.focusNext !== false;
-        const fromEnter = !!(options && options.fromEnter);
         const cell = kanaGrid.querySelector('.kana-cell[data-index="' + index + '"]');
         const input = cell.querySelector(".kana-input");
         const entry = deck[index];
@@ -308,23 +304,6 @@
                 input.placeholder = attempt;
             }
             input.value = "";
-
-            // NOTE: temporarily disabled to test whether enterkeyhint="done"
-            // alone prevents the mobile keyboard from jumping to the next box.
-            // If the jump still happens, re-enable this deferred pull-back.
-            //
-            // When the wrong answer was submitted via Enter, keep the cursor on
-            // this box. Mobile keyboards may natively jump to the next field
-            // after the handler returns, so re-focus on a deferred tick to win
-            // that race. A synchronous focus would be overridden.
-            // if (fromEnter) {
-            //     const box = index;
-            //     setTimeout(function () {
-            //         if (!cellState[box].solved) {
-            //             focusInput(box);
-            //         }
-            //     }, 0);
-            // }
         }
     }
 
@@ -353,38 +332,16 @@
             input.setAttribute("autocapitalize", "off");
             input.setAttribute("autocorrect", "off");
             input.setAttribute("spellcheck", "false");
-            input.setAttribute("inputmode", "latin");
             // Prefer a "done" action key on mobile rather than "next", which
-            // would otherwise jump to the following field.
+            // would otherwise jump to the following field on a wrong answer.
             input.setAttribute("enterkeyhint", "done");
             input.setAttribute("aria-label", "Romaji for " + entry.kana);
-
-            input.addEventListener("focus", function () {
-                activeIndex = index;
-            });
 
             input.addEventListener("keydown", function (event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
                     if (!cellState[index].solved) {
-                        gradeCell(index, { fromEnter: true });
-                    } else {
-                        const next = nextUnsolved(index);
-                        if (next !== -1) {
-                            focusInput(next);
-                        }
-                    }
-                }
-            });
-
-            // Mobile virtual keyboards don't always fire a reliable Enter
-            // keydown; the action key often surfaces as an "insertLineBreak"
-            // beforeinput event instead. Grade on that too.
-            input.addEventListener("beforeinput", function (event) {
-                if (event.inputType === "insertLineBreak") {
-                    event.preventDefault();
-                    if (!cellState[index].solved) {
-                        gradeCell(index, { fromEnter: true });
+                        gradeCell(index);
                     } else {
                         const next = nextUnsolved(index);
                         if (next !== -1) {

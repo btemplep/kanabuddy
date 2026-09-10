@@ -70,26 +70,20 @@ test("a wrong Enter does NOT synchronously advance to the next box", function ()
 });
 
 
-// NOTE: The deferred pull-back is temporarily disabled while testing whether
-// enterkeyhint="done" alone prevents the mobile jump. This test asserts the
-// current (disabled) behavior; re-enable the assertions below along with the
-// setTimeout block in quiz.js when the pull-back is restored.
-test("wrong Enter does not schedule a deferred re-focus (pull-back disabled)", function () {
+test("a wrong Enter leaves focus on the current box (no advance)", function () {
     const h = startedQuiz();
     const box = h.cells["0"];
-    const before = box.input._focusCount;
+    const beforeSame = box.input._focusCount;
+    const beforeNext = h.cells["1"].input._focusCount;
 
     box.input.value = "zzz";
     pressEnter(box.input);
 
-    assert.equal(h.timers.length, 0, "no deferred re-focus while disabled");
-    assert.equal(box.input._focusCount, before, "no synchronous re-focus");
-
-    // When re-enabled, the following should hold:
-    // assert.ok(h.timers.length > 0, "a deferred re-focus should be scheduled");
-    // h.cells["1"].input._focusCount += 1; // simulate native mobile jump
-    // h.runTimers();
-    // assert.ok(box.input._focusCount > before, "deferred tick re-focuses same box");
+    // Mobile no longer jumps ahead thanks to enterkeyhint="done"; the wrong
+    // path neither advances to the next box nor schedules any deferred work.
+    assert.equal(h.cells["1"].input._focusCount, beforeNext, "next box not focused");
+    assert.equal(box.input._focusCount, beforeSame, "no extra focus churn");
+    assert.equal(h.timers.length, 0, "no deferred timers scheduled");
 });
 
 
@@ -103,32 +97,14 @@ test("wrong on blur sets the shadow but does NOT re-focus (deliberate tap respec
 
     assert.equal(cell.input.placeholder, "qqq", "attempt shown as shadow text");
     assert.equal(cell.input.value, "", "value cleared");
-    assert.equal(h.timers.length, 0, "no deferred re-focus scheduled on blur");
     assert.equal(cell.input._focusCount, before, "focus not pulled back on blur");
 });
 
 
-test("the mobile insertLineBreak action grades like Enter", function () {
-    const h = startedQuiz();
-    const box = h.cells["0"];
-
-    box.input.value = "zzz";
-    box.input.dispatch("beforeinput", { inputType: "insertLineBreak", preventDefault() {} });
-
-    // Still grades the box (marks wrong, clears value, shows shadow); the
-    // deferred pull-back is disabled for now, so no timer is scheduled.
-    assert.ok(box.cell.classList.contains("wrong"), "cell marked wrong");
-    assert.equal(box.input.value, "", "value cleared");
-    assert.equal(box.input.placeholder, "zzz", "attempt shown as shadow text");
-    assert.equal(h.timers.length, 0, "no deferred re-focus while disabled");
-});
-
-
-test("inputs carry enterkeyhint=done and inputmode for mobile", function () {
+test("inputs carry enterkeyhint=done for mobile", function () {
     const h = startedQuiz();
     const input = h.cells["0"].input;
     assert.equal(input.getAttribute("enterkeyhint"), "done");
-    assert.equal(input.getAttribute("inputmode"), "latin");
 });
 
 
