@@ -33,6 +33,15 @@ When cutting a release, update `APP_VERSION` and add a matching entry to
 `CHANGELOG.md`. The version is displayed in the site footer automatically (it
 links to the changelog), so there is only one value to edit.
 
+### Testing
+
+Run tests:
+
+```console
+npm test
+```
+
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 or
