@@ -1,3 +1,7 @@
+<!-- 
+SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
 # KanaBuddy
 
 Simple static website for practicing Japanese Kana.
@@ -28,3 +32,8 @@ const APP_VERSION = "0.1.0";
 When cutting a release, update `APP_VERSION` and add a matching entry to
 `CHANGELOG.md`. The version is displayed in the site footer automatically (it
 links to the changelog), so there is only one value to edit.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 or
+later (GPL-3.0-or-later). See the [LICENSE](LICENSE) file for details.

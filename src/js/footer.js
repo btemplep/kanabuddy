@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */   
 // Stamps the app version (from version.js) into any element with
 // [data-app-version]. Loaded after version.js on each page.
 

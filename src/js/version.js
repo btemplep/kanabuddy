@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */ 
 // Single source of truth for the app version.
 // Update this value when cutting a release (keep it in sync with CHANGELOG.md).
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.2.0";

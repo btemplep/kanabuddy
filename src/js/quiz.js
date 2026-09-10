@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */ 
 // KanaBuddy quiz logic.
 // Relies on globals from kana-data.js:
 //   KANA_DATA, GROUP_LABELS, FONT_OPTIONS, buildDeck, shuffle
