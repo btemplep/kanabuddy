@@ -214,3 +214,83 @@ test("clicking the dropdown panel padding (not an option) keeps it open", functi
 
     assert.equal(h.store["font-options"].hidden, false, "stays open on non-option click");
 });
+
+
+test("the dropdown label reflects the checked font at init (not always the first)", function () {
+    const h = loadQuizHarness("klee");
+    // Simulate a non-default font already being the checked selection.
+    h.chosenFont.value = "klee";
+    h.fireDomReady();
+
+    assert.equal(h.fontToggleLabel.textContent, "Klee One");
+});
+
+
+test("New Quiz syncs the dropdown label to the selected font (not the first)", function () {
+    const h = loadQuizHarness("klee");
+    h.chosenFont.value = "klee";
+    h.fireDomReady();
+    h.startQuiz();
+
+    // Returning to setup via the results-modal New Quiz must not leave the
+    // label showing the first font while a different font is selected.
+    h.store["finish-btn"].dispatch("click");
+    h.store["results-new"].dispatch("click");
+    assert.equal(h.fontToggleLabel.textContent, "Klee One");
+});
+
+
+test("New Quiz shows 'Randomize' when random is the selection", function () {
+    const h = loadQuizHarness("random");
+    h.chosenFont.value = "random";
+    h.fireDomReady();
+    h.startQuiz();
+    h.store["finish-btn"].dispatch("click");
+    h.store["results-new"].dispatch("click");
+
+    assert.equal(h.fontToggleLabel.textContent, "Randomize");
+});
+
+
+test("clicking the results backdrop closes the modal", function () {
+    const h = startedQuiz();
+    h.store["finish-btn"].dispatch("click");
+    assert.ok(h.store["results-overlay"].classList.contains("open"), "modal open after finish");
+
+    // Click on the overlay backdrop itself.
+    h.store["results-overlay"].dispatch("click", { target: h.store["results-overlay"] });
+    assert.ok(!h.store["results-overlay"].classList.contains("open"), "backdrop click closes");
+});
+
+
+test("clicking inside the results card does NOT close the modal", function () {
+    const h = startedQuiz();
+    h.store["finish-btn"].dispatch("click");
+
+    // A click whose target is an inner element (not the overlay) is ignored.
+    h.store["results-overlay"].dispatch("click", { target: h.store["results-percent"] });
+    assert.ok(h.store["results-overlay"].classList.contains("open"), "inner click keeps it open");
+});
+
+
+test("results modal opens automatically once every box is answered correctly", function () {
+    const h = startedQuiz();
+    const total = h.grid.children.length;
+
+    // The overlay should not be open until the quiz is complete.
+    for (let i = 0; i < total; i++) {
+        const box = h.cells[String(i)];
+        assert.ok(
+            !h.store["results-overlay"].classList.contains("open"),
+            "modal stays closed until the last box"
+        );
+        box.input.value = h.romajiFor(box.kana)[0];
+        pressEnter(box.input);
+    }
+
+    assert.ok(
+        h.store["results-overlay"].classList.contains("open"),
+        "modal opens once all boxes are correct"
+    );
+    assert.equal(h.store["summary-correct"].textContent, String(total));
+});

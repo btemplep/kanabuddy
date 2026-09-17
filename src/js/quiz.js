@@ -24,8 +24,6 @@
 
     const quizProgress = document.getElementById("quiz-progress");
     const quizProgressBottom = document.getElementById("quiz-progress-bottom");
-    const restartBtn = document.getElementById("restart-btn");
-    const restartBtnBottom = document.getElementById("restart-btn-bottom");
     const finishBtn = document.getElementById("finish-btn");
     const finishBtnBottom = document.getElementById("finish-btn-bottom");
     const kanaGrid = document.getElementById("kana-grid");
@@ -141,6 +139,23 @@
         if (fontToggleLabel) {
             fontToggleLabel.textContent = text;
         }
+    }
+
+
+    // Set the toggle label to match whichever font radio is actually checked.
+    // Keeps the label and selection in sync (e.g. after returning to setup).
+    function syncFontLabel() {
+        const checked = document.querySelector('input[name="font"]:checked');
+        const value = checked ? checked.value : (FONT_OPTIONS[0] && FONT_OPTIONS[0].id);
+        if (value === "random") {
+            setFontLabel("Randomize");
+
+            return;
+        }
+        const match = FONT_OPTIONS.find(function (f) {
+            return f.id === value;
+        });
+        setFontLabel(match ? match.label : (FONT_OPTIONS[0] && FONT_OPTIONS[0].label) || "");
     }
 
 
@@ -289,7 +304,14 @@
             input.value = entry.romaji[0];
             input.readOnly = true;
             updateProgress();
-            if (focusNext) {
+
+            const allSolved = cellState.every(function (state) {
+                return state.solved;
+            });
+            if (allSolved) {
+                // Every box is filled in correctly — show the results.
+                showResults();
+            } else if (focusNext) {
                 const next = nextUnsolved(index);
                 if (next !== -1) {
                     focusInput(next);
@@ -499,6 +521,8 @@
         resultsOverlay.classList.remove("open");
         quizView.classList.add("hidden");
         setupView.classList.remove("hidden");
+        // Keep the font dropdown label in sync with the actual selection.
+        syncFontLabel();
         window.scrollTo(0, 0);
     }
 
@@ -508,10 +532,8 @@
         renderFontOptions();
         renderRandomSample();
 
-        // Reflect the initially-checked font in the dropdown toggle label.
-        if (FONT_OPTIONS[0]) {
-            setFontLabel(FONT_OPTIONS[0].label);
-        }
+        // Reflect the actually-checked font in the dropdown toggle label.
+        syncFontLabel();
 
         fontToggle.addEventListener("click", toggleFontDropdown);
 
@@ -555,16 +577,20 @@
 
         startBtn.addEventListener("click", startQuiz);
         finishBtn.addEventListener("click", showResults);
-        restartBtn.addEventListener("click", returnToSetup);
         if (finishBtnBottom) {
             finishBtnBottom.addEventListener("click", showResults);
-        }
-        if (restartBtnBottom) {
-            restartBtnBottom.addEventListener("click", returnToSetup);
         }
         resultsNew.addEventListener("click", returnToSetup);
         resultsReview.addEventListener("click", function () {
             resultsOverlay.classList.remove("open");
+        });
+
+        // Clicking the backdrop (outside the results card) closes the modal,
+        // returning to the quiz. Clicks on the card itself are ignored.
+        resultsOverlay.addEventListener("click", function (event) {
+            if (event.target === resultsOverlay) {
+                resultsOverlay.classList.remove("open");
+            }
         });
     }
 
