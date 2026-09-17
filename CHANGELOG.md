@@ -21,6 +21,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security 
 -->
 
+## [0.3.0] - 2026-09-16
+
+### Added
+
+- Site logo (pixel art) is now used as the favicon, logo, and shown on the home page
+- Clicking outside the results card (on the backdrop) now closes the results
+  modal.
+  - The results modal now opens automatically once every box has been answered
+  correctly, without needing to press "Finish".
+
+
+### Removed
+
+- Removed the "New Quiz" buttons from the top and bottom of the quiz view. A new
+  quiz can still be started from the results screen after finishing.
+
+### Fixed
+
+- The font dropdown label now stays in sync with the selected font. Previously,
+  after starting a quiz and returning via "New Quiz", the label could show the
+  first font while a different font was still selected.
+
+
 ## [0.2.0] - 2026-09-09
 
 ### Added

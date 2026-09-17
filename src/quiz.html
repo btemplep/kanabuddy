@@ -8,6 +8,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KanaBuddy &mdash; Quiz</title>
+    <link rel="icon" type="image/png" href="img/kanami.png">
+    <link rel="apple-touch-icon" href="img/kanami.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Kosugi+Maru&family=Kaisei+Decol:wght@400;700&family=Yuji+Syuku&family=Klee+One:wght@400;600&family=Hachi+Maru+Pop&display=swap">
@@ -16,7 +18,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 <body>
     <header class="site-header">
         <a class="brand" href="index.html">
-            <span class="logo-slot" aria-hidden="true">か</span>
+            <img class="logo-slot" src="img/kanami.png" alt="" width="40" height="40">
             <span>KanaBuddy</span>
         </a>
         <nav>
@@ -76,7 +78,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <div class="quiz-toolbar">
                 <span class="quiz-progress" id="quiz-progress"></span>
                 <div class="toolbar-actions">
-                    <button class="btn btn-ghost" id="restart-btn" type="button">New Quiz</button>
                     <button class="btn btn-accent" id="finish-btn" type="button">Finish</button>
                 </div>
             </div>
@@ -84,7 +85,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <div class="quiz-toolbar quiz-toolbar-bottom">
                 <span class="quiz-progress" id="quiz-progress-bottom"></span>
                 <div class="toolbar-actions">
-                    <button class="btn btn-ghost" id="restart-btn-bottom" type="button">New Quiz</button>
                     <button class="btn btn-accent" id="finish-btn-bottom" type="button">Finish</button>
                 </div>
             </div>
