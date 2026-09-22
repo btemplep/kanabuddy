@@ -21,6 +21,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security 
 -->
 
+## [0.4.0] - 2026-09-21
+
+### Added
+
+- New Study Guide page: a reference of all hiragana and katakana 
+- A "Study Guide" button on the home page and a "Study" link in the site
+  navigation.
+
+### Changed
+
+- Extracted the custom font dropdown into a shared module used by both the quiz
+  and study pages.
+
 ## [0.3.0] - 2026-09-16
 
 ### Added
