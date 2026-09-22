@@ -15,10 +15,6 @@
     const quizView = document.getElementById("quiz-view");
     const hiraganaGroups = document.getElementById("hiragana-groups");
     const katakanaGroups = document.getElementById("katakana-groups");
-    const fontOptions = document.getElementById("font-options");
-    const fontDropdown = document.getElementById("font-dropdown");
-    const fontToggle = document.getElementById("font-toggle");
-    const fontToggleLabel = document.getElementById("font-toggle-label");
     const setupError = document.getElementById("setup-error");
     const startBtn = document.getElementById("start-btn");
 
@@ -42,6 +38,8 @@
     let deck = [];
     // cellState[i] = { firstAttempt: null|true|false, solved: bool, attempted: bool }
     let cellState = [];
+    // Shared font dropdown instance (created in init).
+    let fontDropdown = null;
 
     function renderGroupChecks(container, script) {
         GROUP_ORDER.forEach(function (group) {
@@ -67,134 +65,6 @@
         });
     }
 
-    function renderFontOptions() {
-        // Insert the concrete font radios before the existing "random" option.
-        const randomLabel = fontOptions.querySelector('input[value="random"]');
-        FONT_OPTIONS.forEach(function (font, index) {
-            const label = document.createElement("label");
-            label.className = "font-choice";
-
-            const input = document.createElement("input");
-            input.type = "radio";
-            input.name = "font";
-            input.value = font.id;
-            if (index === 0) {
-                input.checked = true;
-            }
-            input.addEventListener("change", function () {
-                setFontLabel(font.label);
-                closeFontDropdown();
-            });
-
-            const info = document.createElement("span");
-            info.className = "font-info";
-
-            const name = document.createElement("span");
-            name.className = "font-name";
-            name.textContent = font.label;
-
-            const note = document.createElement("span");
-            note.className = "font-note";
-            note.textContent = font.note ? font.note : "";
-
-            info.appendChild(name);
-            info.appendChild(note);
-
-            const sample = document.createElement("span");
-            sample.className = "font-sample";
-            sample.textContent = font.sample || font.label;
-            sample.style.fontFamily = font.stack;
-
-            label.appendChild(input);
-            label.appendChild(info);
-            label.appendChild(sample);
-            fontOptions.insertBefore(label, randomLabel.parentNode);
-        });
-    }
-
-
-    function renderRandomSample() {
-        const container = document.getElementById("random-sample");
-        if (!container) {
-            return;
-        }
-        container.innerHTML = "";
-        const text = (FONT_OPTIONS[0] && FONT_OPTIONS[0].sample) || "あいうえ　アイウエ";
-        text.split("").forEach(function (ch) {
-            if (ch.trim() === "") {
-                container.appendChild(document.createTextNode(ch));
-
-                return;
-            }
-            const glyph = document.createElement("span");
-            const pick = FONT_OPTIONS[Math.floor(Math.random() * FONT_OPTIONS.length)];
-            glyph.style.fontFamily = pick.stack;
-            glyph.textContent = ch;
-            container.appendChild(glyph);
-        });
-    }
-
-
-    function setFontLabel(text) {
-        if (fontToggleLabel) {
-            fontToggleLabel.textContent = text;
-        }
-    }
-
-
-    // Set the toggle label to match whichever font radio is actually checked.
-    // Keeps the label and selection in sync (e.g. after returning to setup).
-    function syncFontLabel() {
-        const checked = document.querySelector('input[name="font"]:checked');
-        const value = checked ? checked.value : (FONT_OPTIONS[0] && FONT_OPTIONS[0].id);
-        if (value === "random") {
-            setFontLabel("Randomize");
-
-            return;
-        }
-        const match = FONT_OPTIONS.find(function (f) {
-            return f.id === value;
-        });
-        setFontLabel(match ? match.label : (FONT_OPTIONS[0] && FONT_OPTIONS[0].label) || "");
-    }
-
-
-    function openFontDropdown() {
-        fontDropdown.classList.add("open");
-        fontOptions.hidden = false;
-        fontToggle.setAttribute("aria-expanded", "true");
-
-        // Decide whether to open downward or upward based on available space.
-        // Measure after unhiding so the panel has a real height.
-        const toggleRect = fontToggle.getBoundingClientRect();
-        const viewportH = window.innerHeight || document.documentElement.clientHeight;
-        const spaceBelow = viewportH - toggleRect.bottom;
-        const spaceAbove = toggleRect.top;
-        const panelH = fontOptions.offsetHeight || 0;
-
-        // Open upward only if the panel doesn't fit below but does fit (or fits
-        // better) above.
-        const dropUp = spaceBelow < panelH + 12 && spaceAbove > spaceBelow;
-        fontDropdown.classList.toggle("drop-up", dropUp);
-    }
-
-
-    function closeFontDropdown() {
-        fontDropdown.classList.remove("open");
-        fontDropdown.classList.remove("drop-up");
-        fontOptions.hidden = true;
-        fontToggle.setAttribute("aria-expanded", "false");
-    }
-
-
-    function toggleFontDropdown() {
-        if (fontDropdown.classList.contains("open")) {
-            closeFontDropdown();
-        } else {
-            openFontDropdown();
-        }
-    }
-
     function readSelection() {
         const selection = {
             hiragana: [],
@@ -208,20 +78,6 @@
         });
 
         return selection;
-    }
-
-    function getFontStack(fontId) {
-        const match = FONT_OPTIONS.find(function (f) {
-            return f.id === fontId;
-        });
-
-        return match ? match.stack : FONT_OPTIONS[0].stack;
-    }
-
-    function selectedFontMode() {
-        const checked = document.querySelector('input[name="font"]:checked');
-
-        return checked ? checked.value : FONT_OPTIONS[0].id;
     }
 
     function normalize(value) {
@@ -343,7 +199,7 @@
                 const pick = FONT_OPTIONS[Math.floor(Math.random() * FONT_OPTIONS.length)];
                 char.style.fontFamily = pick.stack;
             } else {
-                char.style.fontFamily = getFontStack(fontMode);
+                char.style.fontFamily = fontDropdown.getFontStack(fontMode);
             }
 
             const input = document.createElement("input");
@@ -415,7 +271,7 @@
             };
         });
 
-        buildCells(selectedFontMode());
+        buildCells(fontDropdown.getMode());
         updateProgress();
 
         setupView.classList.add("hidden");
@@ -522,58 +378,16 @@
         quizView.classList.add("hidden");
         setupView.classList.remove("hidden");
         // Keep the font dropdown label in sync with the actual selection.
-        syncFontLabel();
+        fontDropdown.syncLabel();
         window.scrollTo(0, 0);
     }
 
     function init() {
         renderGroupChecks(hiraganaGroups, "hiragana");
         renderGroupChecks(katakanaGroups, "katakana");
-        renderFontOptions();
-        renderRandomSample();
 
-        // Reflect the actually-checked font in the dropdown toggle label.
-        syncFontLabel();
-
-        fontToggle.addEventListener("click", toggleFontDropdown);
-
-        // Close the dropdown when an option is clicked, even if it's the one
-        // already selected (in which case no "change" event fires).
-        fontOptions.addEventListener("click", function (event) {
-            const label = event.target.closest
-                ? event.target.closest("label")
-                : null;
-            if (label) {
-                if (event.target.value === "random") {
-                    // Keep the random preview fresh on re-selection.
-                    setFontLabel("Randomize");
-                    renderRandomSample();
-                }
-                closeFontDropdown();
-            }
-        });
-
-        // Close the dropdown when clicking outside of it.
-        document.addEventListener("click", function (event) {
-            if (!fontDropdown.contains(event.target)) {
-                closeFontDropdown();
-            }
-        });
-
-        // Close on Escape for keyboard users.
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape") {
-                closeFontDropdown();
-            }
-        });
-
-        const randomRadio = document.querySelector('input[name="font"][value="random"]');
-        if (randomRadio) {
-            randomRadio.addEventListener("change", function () {
-                setFontLabel("Randomize");
-                closeFontDropdown();
-            });
-        }
+        // Shared font dropdown (renders options, handles open/close, etc.).
+        fontDropdown = createFontDropdown();
 
         startBtn.addEventListener("click", startQuiz);
         finishBtn.addEventListener("click", showResults);

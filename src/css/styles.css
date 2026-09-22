@@ -92,6 +92,12 @@ body {
     display: block;
 }
 
+.site-header nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
 .site-header nav a {
     color: #fff;
     text-decoration: none;
@@ -101,6 +107,13 @@ body {
 
 .site-header nav a:hover {
     opacity: 1;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 /* Hero (home page) */
@@ -707,4 +720,164 @@ body {
 
 .site-footer .footer-copyright {
     color: var(--color-text-muted);
+}
+
+/* Study / reference page */
+.study-intro {
+    text-align: center;
+    padding: 32px 20px 16px;
+}
+
+.study-intro h1 {
+    margin: 0 0 12px;
+    color: var(--color-secondary);
+}
+
+.study-intro p {
+    color: var(--color-text-muted);
+    max-width: 620px;
+    margin: 0 auto 20px;
+}
+
+.study-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.study-tab {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.study-tab:hover {
+    border-color: var(--color-secondary);
+}
+
+.study-tab.active {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: #fff;
+}
+
+.study-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.study-control {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.study-control .study-font-label {
+    text-align: left;
+}
+
+.study-control .font-dropdown {
+    width: 100%;
+}
+
+.study-romaji-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.study-font-label {
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.study-script {
+    margin-bottom: 32px;
+}
+
+.study-group {
+    margin-bottom: 24px;
+}
+
+.study-group-title {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 12px;
+}
+
+.study-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 12px;
+}
+
+.study-tile {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 8px;
+    text-align: center;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.08s ease;
+}
+
+.study-tile:hover {
+    border-color: var(--color-secondary);
+}
+
+.study-tile:active {
+    transform: translateY(1px);
+}
+
+.study-tile .study-kana {
+    display: block;
+    /* Font family is set inline per glyph by study.js (supports randomize). */
+    font-family: var(--kana-font);
+    font-size: 2.1rem;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+
+.study-tile .study-romaji {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    /* Reserve a line so revealing/hiding romaji doesn't shift the layout. */
+    min-height: 1.2em;
+    transition: opacity 0.12s ease;
+}
+
+/* Romaji hidden until the tile is clicked. */
+.study-tile.romaji-hidden .study-romaji {
+    opacity: 0;
+}
+
+@media (max-width: 520px) {
+    .study-grid {
+        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    }
+
+    .study-tile .study-kana {
+        font-size: 1.8rem;
+    }
 }

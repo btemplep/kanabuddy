@@ -311,6 +311,7 @@ function loadQuizHarness(fontValue) {
     };
     vm.createContext(sandbox);
     vm.runInContext(fs.readFileSync(path.join(SRC_JS, "kana-data.js"), "utf8"), sandbox);
+    vm.runInContext(fs.readFileSync(path.join(SRC_JS, "font-dropdown.js"), "utf8"), sandbox);
     vm.runInContext(fs.readFileSync(path.join(SRC_JS, "quiz.js"), "utf8"), sandbox);
 
     function fireDomReady() {
