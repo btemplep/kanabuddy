@@ -242,8 +242,9 @@ const GROUP_LABELS = {
 
 // Font choices. `label` is the display name, `stack` is the CSS font-family,
 // `sample` is the preview text shown next to the option, and `note` is a short
-// description of the style. Google-Fonts-backed families are loaded via a
-// <link> in the HTML head (no installs required).
+// description of the style. The styled families are self-hosted (kana-subset
+// woff2 in src/fonts/) via src/css/fonts.css, so no network access is needed;
+// regenerate them with scripts/fetch-fonts.py.
 const FONT_SAMPLE = "あいうえ　アイウエ";
 
 const FONT_OPTIONS = [

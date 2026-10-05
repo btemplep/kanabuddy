@@ -1,1 +1,12 @@
 TODO.md
+
+# Android build output, IDE, and local config. The web app is copied from src/
+# into an AGP-managed generated assets dir under build/ by the syncWebAssets
+# task, so it is covered by the build/ ignore below (never edit or commit it).
+android/**/build/
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/release/
+*.apk
+*.aab

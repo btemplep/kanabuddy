@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Brandon Temple Paul
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Download kana-subset web fonts for KanaBuddy so the site works offline.
+
+For each font family and weight that KanaBuddy uses, this script asks the
+Google Fonts CSS API for a subset containing only the glyphs the site renders
+(every kana, CJK punctuation/prolonged-sound mark, and basic Latin) via the
+``text=`` parameter. Google returns an already-subsetted ``woff2`` file, which
+is saved into ``src/fonts/``. A matching ``src/css/fonts.css`` with local
+``@font-face`` rules is generated so the pages no longer reference Google at
+runtime.
+
+This is a build-time step only; the shipped site and app have no network
+dependency on Google Fonts. Re-run it whenever the font list changes.
+
+Examples
+--------
+
+```console
+python3 scripts/fetch-fonts.py
+```
+"""
+
+import os
+import urllib.parse
+import urllib.request
+
+
+UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+)
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+FONT_DIR = os.path.join(
+    ROOT,
+    "src",
+    "fonts"
+)
+
+CSS_PATH = os.path.join(
+    ROOT,
+    "src",
+    "css",
+    "fonts.css"
+)
+
+# Every glyph KanaBuddy can display: all hiragana and katakana (including the
+# small combo kana and dakuten/handakuten), the prolonged-sound mark, the
+# ideographic space used in samples, and basic Latin for labels.
+SUBSET_TEXT = (
+    "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめも"
+    "やゆよらりるれろわをんゃゅょっ"
+    "がぎぐげございぜぞじずだぢづでどばびぶべぼぱぴぷぺぽ"
+    "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモ"
+    "ヤユヨラリルレロワヲンャュョッ"
+    "ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ"
+    "ー　"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    " .,'()/"
+)
+
+FONTS = [
+    {
+        "family": "Noto Sans JP",
+        "weights": [
+            400,
+            700
+        ],
+        "slug": "noto-sans-jp"
+    },
+    {
+        "family": "Noto Serif JP",
+        "weights": [
+            400,
+            700
+        ],
+        "slug": "noto-serif-jp"
+    },
+    {
+        "family": "Kosugi Maru",
+        "weights": [400],
+        "slug": "kosugi-maru"
+    },
+    {
+        "family": "Kaisei Decol",
+        "weights": [
+            400,
+            700
+        ],
+        "slug": "kaisei-decol"
+    },
+    {
+        "family": "Yuji Syuku",
+        "weights": [400],
+        "slug": "yuji-syuku"
+    },
+    {
+        "family": "Klee One",
+        "weights": [
+            400,
+            600
+        ],
+        "slug": "klee-one"
+    },
+    {
+        "family": "Hachi Maru Pop",
+        "weights": [400],
+        "slug": "hachi-maru-pop"
+    }
+]
+
+
+def http_get(url, binary=False):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": UA
+        }
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        data = response.read()
+
+    return data if binary is True else data.decode("utf-8")
+
+
+def build_css_url(family, weight):
+    text = urllib.parse.quote(SUBSET_TEXT)
+    fam = family.replace(" ", "+")
+
+    return (
+        "https://fonts.googleapis.com/css2?family="
+        + fam
+        + ":wght@"
+        + str(weight)
+        + "&text="
+        + text
+    )
+
+
+def extract_font_url(css):
+    marker = "src: url("
+    start = css.find(marker)
+    if start == -1:
+        raise ValueError("no font url found in CSS response")
+
+    start += len(marker)
+    end = css.find(")", start)
+
+    return css[start:end]
+
+
+def main():
+    os.makedirs(FONT_DIR, exist_ok=True)
+
+    face_rules = []
+    for entry in FONTS:
+        for weight in entry["weights"]:
+            css = http_get(build_css_url(entry["family"], weight))
+            font_url = extract_font_url(css)
+            data = http_get(font_url, binary=True)
+
+            out_name = entry["slug"] + "-" + str(weight) + ".woff2"
+            out_path = os.path.join(
+                FONT_DIR,
+                out_name
+            )
+            with open(out_path, "wb") as handle:
+                handle.write(data)
+
+            size_kb = len(data) / 1024
+            print(
+                "  "
+                + entry["family"]
+                + " "
+                + str(weight)
+                + " -> fonts/"
+                + out_name
+                + " ("
+                + format(size_kb, ".1f")
+                + " KB)"
+            )
+
+            face_rules.append(
+                "@font-face {\n"
+                + "    font-family: '" + entry["family"] + "';\n"
+                + "    font-style: normal;\n"
+                + "    font-weight: " + str(weight) + ";\n"
+                + "    font-display: swap;\n"
+                + "    src: url('../fonts/" + out_name + "') format('woff2');\n"
+                + "}"
+            )
+
+    header = (
+        "/*\n"
+        " * SPDX-FileCopyrightText: 2026 Brandon Temple Paul\n"
+        " * SPDX-License-Identifier: GPL-3.0-or-later\n"
+        " */\n"
+        "/* Generated by scripts/fetch-fonts.py. Do not edit by hand. */\n"
+        "/* Fonts are Google Fonts (SIL Open Font License), subset to the\n"
+        "   kana + Latin glyphs KanaBuddy renders, and self-hosted so the site\n"
+        "   works offline. Re-run the script to regenerate. */\n"
+    )
+    with open(CSS_PATH, "w") as handle:
+        handle.write(header + "\n" + "\n\n".join(face_rules) + "\n")
+
+    print("Wrote " + str(len(face_rules)) + " @font-face rules to src/css/fonts.css")
+
+
+if __name__ == "__main__":
+    main()
