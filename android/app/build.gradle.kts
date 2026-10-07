@@ -48,9 +48,13 @@ abstract class SyncWebAssets : DefaultTask() {
 
     @TaskAction
     fun run() {
+        // Copy into a www/ subdirectory so the files land at assets/www/ in the
+        // APK, matching the URL MainActivity loads
+        // (https://appassets.androidplatform.net/assets/www/index.html).
         fs.sync {
             from(webSrcDir) {
                 exclude("CNAME")
+                into("www")
             }
             into(outputDir)
         }

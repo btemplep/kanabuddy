@@ -21,11 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security 
 -->
 
-## [0.5.0] - 2026-10-04
+## [0.5.0] - 2026-10-xx
 
 ### Added
 
-- Android app (in `android/`) that wraps the site in a WebView and serves it. 
+- Android app (in `android/`) that wraps the site in a WebView and serves it
+  from local assets, so it runs fully offline with no `INTERNET` permission.
 - A `scripts/fetch-fonts.py` build script that downloads each styled font as a
   kana-subset `woff2` and regenerates `src/css/fonts.css`.
 
@@ -34,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The styled Japanese fonts are now self-hosted (kana-subset `woff2` files in
   `src/fonts/`) instead of loaded from Google Fonts at runtime, so the styled
   fonts work with no internet connection.
+- The quiz now scrolls the next unsolved cell to the center of the view when you
+  advance, so the active input stays visible. Helping with display for web, mobile web, and app. 
 
 ### Removed
 

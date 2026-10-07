@@ -95,6 +95,21 @@
         });
     }
 
+    // Scroll a cell to the center of the viewport. focus()'s implicit
+    // scroll-into-view is unreliable in the Android WebView, so we call this
+    // explicitly when advancing to the next cell.
+    function scrollCellIntoView(index) {
+        const cell = kanaGrid.querySelector(
+            '.kana-cell[data-index="' + index + '"]'
+        );
+        if (cell && typeof cell.scrollIntoView === "function") {
+            cell.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    }
+
     function focusInput(index, preventScroll) {
         if (index < 0 || index >= deck.length) {
             return;
@@ -108,6 +123,13 @@
                 input.focus();
             }
             input.select();
+
+            // focus()'s implicit scroll-into-view is unreliable in the Android
+            // WebView, so scroll the cell into view explicitly (except when the
+            // caller is intentionally suppressing scrolling, e.g. on reset).
+            if (preventScroll !== true) {
+                scrollCellIntoView(index);
+            }
         }
     }
 
