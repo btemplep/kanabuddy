@@ -43,6 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the runtime dependency on Google Fonts, including the `preconnect`
   hints and the `fonts.googleapis.com` stylesheet links.
 
+### Fixed
+- Fix nav bar in study mode to show Home and Quiz instead of Study and Quiz
+
 
 ## [0.4.0] - 2026-09-21
 
