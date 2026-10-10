@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Site brand palette (mirrors src/css/styles.css custom properties). -->
+    <color name="brand_primary">#81e4b4</color>
+    <color name="brand_primary_dark">#4fc98d</color>
+    <color name="brand_secondary">#9060e7</color>
+    <color name="brand_secondary_dark">#6f42c9</color>
+    <color name="site_bg">#f6f5fb</color>
+</resources>

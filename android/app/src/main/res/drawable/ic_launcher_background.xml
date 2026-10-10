@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Mirrors the site's linear-gradient(120deg, secondary purple, primary
+         green): purple at the top-left fading to green at the bottom-right. -->
+    <gradient
+        android:type="linear"
+        android:angle="315"
+        android:startColor="#9060e7"
+        android:endColor="#81e4b4" />
+</shape>
