@@ -2,3 +2,7 @@ local.properties
 .idea/
 .gradle/
 build/
+keystore.properties
+keystore/
+*.jks
+*.keystore

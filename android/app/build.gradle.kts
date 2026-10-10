@@ -7,6 +7,8 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import java.io.FileInputStream
+import java.util.Properties
 import javax.inject.Inject
 
 plugins {
@@ -75,10 +77,31 @@ androidComponents {
     }
 }
 
+// Load release signing secrets from android/keystore.properties if present.
+// This file is git-ignored and holds the keystore path and passwords, so the
+// signing config stays out of version control.
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) {
+        FileInputStream(keystorePropsFile).use { load(it) }
+    }
+}
+
 android {
     namespace = "com.btemplep.kanabuddy"
     compileSdk {
         version = release(37)
+    }
+
+    signingConfigs {
+        if (keystorePropsFile.exists()) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
     }
 
     defaultConfig {
@@ -93,6 +116,9 @@ android {
 
     buildTypes {
         release {
+            if (keystorePropsFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
