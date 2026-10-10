@@ -6,7 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 Simple static website for practicing Japanese Kana.
 
-Practice at [KanaBuddy](https://kanabuddy.org)!
+Practice on the:
+- [KanaBuddy Website](https://kanabuddy.org)
+- [KanaBuddy Android App](https://play.google.com/store/apps/details?id=com.btemplep.kanabuddy)
+
 
 ## Development
 
@@ -91,3 +94,7 @@ Notes:
 
 This project is licensed under the GNU General Public License v3.0 or
 later (GPL-3.0-or-later). See the [LICENSE](LICENSE) file for details.
+
+## Privacy Policy
+
+See the [PRIVACY POLICY](./PRIVACY_POLICY.md)
